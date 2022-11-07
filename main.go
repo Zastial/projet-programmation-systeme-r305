@@ -9,6 +9,7 @@ import (
 	"flag"
 	_ "image/png"
 	"log"
+	"net"
 
 	"github.com/hajimehoshi/ebiten/v2"
 )
@@ -34,7 +35,10 @@ func main() {
 	g := InitGame()
 	g.getTPS = getTPS
 
-	connexion(ip)
+	var clients []net.Conn
+	clients = connexion(ip, clients) //permet aux clients de se connecter
+
+	
 
 	err := ebiten.RunGame(&g)
 	log.Print(err)

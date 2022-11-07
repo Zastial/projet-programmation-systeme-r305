@@ -26,8 +26,6 @@ func main() {
 
 		fmt.Println("Un client a rejoint le serveur")
 
-		conn.Write([]byte("Bienvenue sur le serveur\n"))
-
 		if(len(connexion) == 4) {
 			return
 		}

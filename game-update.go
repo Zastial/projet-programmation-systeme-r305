@@ -37,7 +37,7 @@ func (g *Game) ChooseRunners() (done bool) {
 		if i == 0 {
 			done = g.runners[i].ManualChoose() && done
 		} else {
-			done = g.runners[i].RandomChoose() && done
+			
 		}
 	}
 	return done
