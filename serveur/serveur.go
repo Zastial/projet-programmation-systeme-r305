@@ -4,7 +4,10 @@ import (
 	"fmt"
 	"log"
 	"net"
+
 )
+
+var connexion []net.Conn
 
 func main() {
 	listener, err := net.Listen("tcp", ":8080")
@@ -14,7 +17,6 @@ func main() {
 	}
 	defer listener.Close()
 
-	var connexion []net.Conn
 	for {
 		conn, err := listener.Accept()
 		if err != nil {
@@ -26,21 +28,20 @@ func main() {
 
 		fmt.Println("Un client a rejoint le serveur")
 
-		var c = 0
-		handleWelcome := make([]bool, len(connexion))
-		for (c != 4) {
-			for i, conn := range connexion {
-				if (HandleWelcomeScreen() == true) {
-					log.Println("zizi")
-					// handleWelcome[i] = true
-					// c++
-				}
-			}
-		}
 
-		if(len(connexion) == 4) {
-			
+
+		var msg = make([]byte, 1024)
+		byteCount, err := conn.Read(msg)
+		if err != nil {
+			log.Println("error", err)
+			return
 		}
+		log.Println("Bits reçu:", byteCount)
+		log.Println("Message reçu:", string(msg))
 	}
+}
+
+func giveConn() (connexion[]net.Conn) {
+	return connexion
 }
 
