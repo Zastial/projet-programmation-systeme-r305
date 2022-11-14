@@ -37,7 +37,6 @@ func main() {
 
 	var clients []net.Conn
 	clients = connexion(ip, clients) //permet aux clients de se connecter
-
 	
 
 	err := ebiten.RunGame(&g)

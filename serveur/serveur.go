@@ -26,8 +26,21 @@ func main() {
 
 		fmt.Println("Un client a rejoint le serveur")
 
+		var c = 0
+		handleWelcome := make([]bool, len(connexion))
+		for (c != 4) {
+			for i, conn := range connexion {
+				if (HandleWelcomeScreen() == true) {
+					log.Println("zizi")
+					// handleWelcome[i] = true
+					// c++
+				}
+			}
+		}
+
 		if(len(connexion) == 4) {
-			return
+			
 		}
 	}
 }
+

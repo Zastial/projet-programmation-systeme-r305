@@ -35,6 +35,10 @@ func (g *Game) DrawWelcomeScreen(screen *ebiten.Image) {
 		screenWidth/2-60,
 		screenHeight/2+10,
 	)
+	// ebitenutil.DebugPrintAt(
+	// 	screen,
+	// 	fmt.Sprint("Joueurs connectés : ")
+	// )
 }
 
 // DrawSelectScreen displays the runner selection screen in the game window
