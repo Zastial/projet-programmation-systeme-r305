@@ -4,33 +4,62 @@ import (
 	"log"
 	"net"
 	"bufio"
+	"strings"
+	// "time"
+
+	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/hajimehoshi/ebiten/v2/inpututil"
 )
 
-func connexion(ip string, connexion []net.Conn) (clients []net.Conn) {
+var ip_reseau string
+
+func (g *Game)connexion(ip string) (client net.Conn) {
 	conn, err := net.Dial("tcp", ip + ":8080")
 	if err != nil {
 		log.Println("Dial error:", err)
 		return
 	}
-	defer conn.Close()
 
-	clients = append(connexion, conn)
+	go g.readFromServer()
 
-	return clients
+	return conn
 }
 
-func writeToServer(clients []net.Conn, msg string) {
-	for _,client := range clients {
-		_, err = client.Write([]byte(msg))
-	}
+func (g *Game)writeToServer(message string) {
+    writer := bufio.NewWriter(g.conn)
+    _, err := writer.WriteString(message+"\n")
+    writer.Flush()
+    if err!=nil{
+        return
+    }
 }
 
-func readFromServer(clients) (text string){
+func (g *Game)readFromServer() (text string){
+	reader := bufio.NewReader(g.conn)
 	for {
-		for _,conn := range clients {
-			netData, _ := bufio.NewReader(conn).ReadString('\n')
-			text = string(netData)
+		s, err := reader.ReadString('\n')
+		if err != nil {
+			log.Println("read error:", err)
 		}
-		return text
+		strip := strings.TrimSuffix(s, "\n")
+		log.Println("received message from server : ", strip)
+
+		g.receiveChannel <- strip
 	}
+}
+
+
+func (g *Game)HandleWelcomeScreenMulti() (bool) {
+	if g.conn == nil && inpututil.IsKeyJustPressed(ebiten.KeySpace) {
+		g.conn = g.connexion(ip_reseau)
+	}
+
+	select {
+	case message := <- g.receiveChannel:
+		if message == "200" {
+			return true
+		}
+	default:
+	}
+	return false
 }

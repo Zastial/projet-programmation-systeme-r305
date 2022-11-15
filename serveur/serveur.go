@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net"
-
+	"bufio"
 )
 
 var connexion []net.Conn
@@ -18,30 +18,31 @@ func main() {
 	defer listener.Close()
 
 	for {
-		conn, err := listener.Accept()
-		if err != nil {
-			log.Println("accept error:", err)
-			return
+		for(len(connexion) < 4) {
+			conn, err := listener.Accept()
+			if err != nil {
+				log.Println("accept error:", err)
+				return
+			}
+			connexion = append(connexion, conn)
+			defer conn.Close()
+
+			fmt.Println("Un client a rejoint le serveur")
 		}
-		connexion = append(connexion, conn)
-		defer conn.Close()
+	}
 
-		fmt.Println("Un client a rejoint le serveur")
-
-
-
-		var msg = make([]byte, 1024)
-		byteCount, err := conn.Read(msg)
-		if err != nil {
-			log.Println("error", err)
-			return
+	if (len(connexion) == 4) {
+		for _, conn := range connexion {
+			writer := bufio.NewWriter(conn)
+			writer.WriteString("200\n")
+			writer.Flush()
+			if err != nil{
+				return
+			}
 		}
-		log.Println("Bits reçu:", byteCount)
-		log.Println("Message reçu:", string(msg))
+	} 
+
+	for {
+
 	}
 }
-
-func giveConn() (connexion[]net.Conn) {
-	return connexion
-}
-

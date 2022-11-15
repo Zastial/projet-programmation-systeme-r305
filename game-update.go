@@ -26,7 +26,6 @@ import (
 // start the game
 func (g *Game) HandleWelcomeScreen() bool {
 	return inpututil.IsKeyJustPressed(ebiten.KeySpace)
-
 }
 
 // ChooseRunners loops over all the runners to check which sprite each
@@ -113,7 +112,7 @@ func (g *Game) HandleResults() bool {
 func (g *Game) Update() error {
 	switch g.state {
 	case StateWelcomeScreen:
-		done := g.HandleWelcomeScreen()
+		done := g.HandleWelcomeScreenMulti()
 		if done {
 			g.state++
 		}
