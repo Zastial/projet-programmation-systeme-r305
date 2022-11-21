@@ -27,13 +27,13 @@ func main() {
 	var ip string
 	flag.StringVar(&ip, "serverip", "localhost", "IP du serveur")
 	flag.Parse()
-	ip_reseau = ip
 
 	ebiten.SetWindowSize(screenWidth, screenHeight)
 	ebiten.SetWindowTitle("BUT2 année 2022-2023, R3.05 Programmation système")
 
 	g := InitGame()
 	g.getTPS = getTPS
+	g.IP = ip
 
 	err := ebiten.RunGame(&g)
 	log.Print(err)

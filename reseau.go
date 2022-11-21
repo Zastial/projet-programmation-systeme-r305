@@ -13,16 +13,14 @@ import (
 
 var ip_reseau string
 
-func (g *Game)connexion(ip string) (client net.Conn) {
-	conn, err := net.Dial("tcp", ip + ":8080")
+func (g *Game)connexion() {
+	conn, err := net.Dial("tcp", g.IP + ":8080")
 	if err != nil {
 		log.Println("Dial error:", err)
 		return
 	}
-
+	g.conn = conn
 	go g.readFromServer()
-
-	return conn
 }
 
 func (g *Game)writeToServer(message string) {
@@ -42,24 +40,30 @@ func (g *Game)readFromServer() (text string){
 			log.Println("read error:", err)
 		}
 		strip := strings.TrimSuffix(s, "\n")
+
 		log.Println("received message from server : ", strip)
 
 		g.receiveChannel <- strip
+		log.Println("Le message enregistré est : ", <-g.receiveChannel)
+
+		return strip
 	}
 }
 
 
 func (g *Game)HandleWelcomeScreenMulti() (bool) {
 	if g.conn == nil && inpututil.IsKeyJustPressed(ebiten.KeySpace) {
-		g.conn = g.connexion(ip_reseau)
+		go g.connexion()
 	}
 
 	select {
 	case message := <- g.receiveChannel:
+		log.Println("Waiting for the message..")
 		if message == "200" {
 			return true
 		}
 	default:
+		break
 	}
 	return false
 }

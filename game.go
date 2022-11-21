@@ -26,6 +26,7 @@ type Game struct {
 	launchStep  int           // Current step in StateLaunchRun state
 	resultStep  int           // Current step in StateResult state
 	getTPS      bool          // Help for debug
+	IP 			string
 	conn		net.Conn
 	receiveChannel chan string
 }
