@@ -6,6 +6,7 @@ import (
 	"bufio"
 	"strings"
 	"time"
+	"strconv"
 )
 
 type ClientListener struct {
@@ -24,8 +25,9 @@ func main() {
 	}
 	defer listener.Close()
 
+	var maxClients = 2
 
-	for(len(clientsPresents) < 4) {
+	for(len(clientsPresents) < maxClients) {
 		conn, err := listener.Accept()
 		if err != nil {
 			log.Println("accept error:", err)
@@ -40,11 +42,20 @@ func main() {
 		clientsPresents = append(clientsPresents,cl)
 
 
-		err = writeMessage(cl, "100")
+		data,err := writeMessage(cl, "100")
+		log.Println(data)
 		if err != nil {
 			log.Println("write error:", err)
 			return
 		}
+
+		data,err = writeMessage(cl,strconv.Itoa(len(clientsPresents)))
+		log.Println("id : ",data)
+		if err != nil {
+			log.Println("write error:", err)
+			return
+		}
+
 		go receiveFromClient(cl)
 		log.Println("Client connected")
 	}
@@ -55,20 +66,22 @@ func main() {
 		return
 	}
 
+
 	time.Sleep(10*time.Second)
 }
 
-func writeMessage(client ClientListener, message string) (err error) {
-	_, err = client.conn.Write([]byte(message+"\n"))
-	return err
+func writeMessage(client ClientListener, message string) (data int, err error) {
+	data, err = client.conn.Write([]byte(message+"\n"))
+	log.Println("just sent : ", data)
+	return data,err
 }
 
 func writeToClients(clients []ClientListener, message string) (err error) {
 	for _, client := range clients {
-		err = writeMessage(client,message)
+		_,err := writeMessage(client,message)
 		if err != nil {
 			log.Println("listen error:", err)
-			return
+			return err
 		}
 		log.Println("message envoyé : ",message)
 	}

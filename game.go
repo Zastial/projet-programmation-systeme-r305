@@ -26,6 +26,7 @@ type Game struct {
 	launchStep  int           // Current step in StateLaunchRun state
 	resultStep  int           // Current step in StateResult state
 	getTPS      bool          // Help for debug
+	id_runner	int
 	IP 			string
 	conn		net.Conn
 	receiveChannel chan string
@@ -74,6 +75,8 @@ func InitGame() (g Game) {
 		xarrival: finish,
 		chrono:   time.Now(),
 	}
+
+	g.receiveChannel = make(chan string, 1)
 
 	return g
 }

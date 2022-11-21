@@ -5,7 +5,7 @@ import (
 	"net"
 	"bufio"
 	"strings"
-	// "time"
+	"strconv"
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
@@ -32,10 +32,11 @@ func (g *Game)writeToServer(message string) {
     }
 }
 
-func (g *Game)readFromServer() (text string){
+func (g *Game)readFromServer() {
 	reader := bufio.NewReader(g.conn)
 	for {
 		s, err := reader.ReadString('\n')
+		log.Println("Données recues",s)
 		if err != nil {
 			log.Println("read error:", err)
 		}
@@ -44,20 +45,25 @@ func (g *Game)readFromServer() (text string){
 		log.Println("received message from server : ", strip)
 
 		g.receiveChannel <- strip
-		log.Println("Le message enregistré est : ", <-g.receiveChannel)
-
-		return strip
+		log.Println("Le message enregistré est : ", strip)
 	}
 }
 
 
 func (g *Game)HandleWelcomeScreenMulti() (bool) {
 	if g.conn == nil && inpututil.IsKeyJustPressed(ebiten.KeySpace) {
-		go g.connexion()
+		g.connexion()
 	}
 
 	select {
 	case message := <- g.receiveChannel:
+
+		id, _:= strconv.Atoi(message)
+		if id <=4 && id >= 1 {
+			g.id_runner = id-1
+			log.Println("You are the player : ", g.id_runner)
+		}
+
 		log.Println("Waiting for the message..")
 		if message == "200" {
 			return true
@@ -66,4 +72,11 @@ func (g *Game)HandleWelcomeScreenMulti() (bool) {
 		break
 	}
 	return false
+}
+
+func (g *Game) ChooseRunnersMulti() (done bool) {
+	
+	done = g.runners[0].ManualChoose()
+
+	return done
 }
