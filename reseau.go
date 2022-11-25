@@ -36,7 +36,6 @@ func (g *Game)readFromServer() {
 	reader := bufio.NewReader(g.conn)
 	for {
 		s, err := reader.ReadString('\n')
-		log.Println("Données recues",s)
 		if err != nil {
 			log.Println("read error:", err)
 		}
@@ -45,7 +44,6 @@ func (g *Game)readFromServer() {
 		log.Println("received message from server : ", strip)
 
 		g.receiveChannel <- strip
-		log.Println("Le message enregistré est : ", strip)
 	}
 }
 
@@ -74,9 +72,22 @@ func (g *Game)HandleWelcomeScreenMulti() (bool) {
 	return false
 }
 
-func (g *Game) ChooseRunnersMulti() (done bool) {
-	
-	done = g.runners[0].ManualChoose()
+func (g *Game) ChooseRunnersMulti() (bool) {
 
-	return done
+	if (g.runners[g.id_runner].ManualChoose()) {
+		id := strconv.Itoa(g.id_runner)
+		// couleur := strconv.Itoa(g.runners[g.id_runner].get_colorScheme())
+		g.writeToServer("3"+id+"5")
+	}
+
+	select {
+	case message := <- g.receiveChannel:
+		log.Println("Waiting for the message..")
+		if message == "400" {
+			return true
+		}
+	default:
+		break
+	}
+	return false
 }

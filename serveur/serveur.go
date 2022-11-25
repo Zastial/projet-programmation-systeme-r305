@@ -66,13 +66,33 @@ func main() {
 		return
 	}
 
+	runnerschose := [4]bool{false,false,false,false}
+	for i,client := range clientsPresents {	
+		
+		go receiveFromClient(client)
+
+		if string(<-client.receiveChannel) == "305" {	
+			log.Println("OK CA MARCHE BB")
+			runnerschose[i] = true
+		}
+	}
+
+	// c := 0
+	// for i := range runnerschose {
+	// 	if runnerschose[i] == true {
+	// 		c++
+	// 	}
+	// }
+	// if c == len(runnerschose) {
+	// 	writeToClients(clientsPresents,"400")
+	// }
+
 
 	time.Sleep(10*time.Second)
 }
 
 func writeMessage(client ClientListener, message string) (data int, err error) {
 	data, err = client.conn.Write([]byte(message+"\n"))
-	log.Println("just sent : ", data)
 	return data,err
 }
 
@@ -83,7 +103,6 @@ func writeToClients(clients []ClientListener, message string) (err error) {
 			log.Println("listen error:", err)
 			return err
 		}
-		log.Println("message envoyé : ",message)
 	}
 	return err
 }

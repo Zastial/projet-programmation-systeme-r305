@@ -42,6 +42,10 @@ type Runner struct {
 	animationFrame    int           // Number of frames since the last animation step
 }
 
+func (r *Runner)get_colorScheme() (int){
+	return r.colorScheme
+}
+
 // ManualUpdate allows to use the keyboard in order to control a runner
 // when the game is in the StateRun state (i.e. during a run)
 func (r *Runner) ManualUpdate() {

@@ -36,7 +36,7 @@ func (g *Game) ChooseRunners() (done bool) {
 		if i == 0 {
 			done = g.runners[i].ManualChoose() && done
 		} else {
-			
+			// g.runners[i].RandomChoose() && done
 		}
 	}
 	return done
@@ -117,7 +117,7 @@ func (g *Game) Update() error {
 			g.state++
 		}
 	case StateChooseRunner:
-		done := g.ChooseRunners()
+		done := g.ChooseRunnersMulti()
 		if done {
 			g.UpdateAnimation()
 			g.state++
