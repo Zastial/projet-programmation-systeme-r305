@@ -59,6 +59,7 @@ func (g *Game)HandleWelcomeScreenMulti() (bool) {
 		id, _:= strconv.Atoi(message)
 		if id <=4 && id >= 1 {
 			g.id_runner = id-1
+			g.runners[0], g.runners[g.id_runner] = g.runners[g.id_runner], g.runners[0]
 			log.Println("You are the player : ", g.id_runner)
 		}
 
@@ -76,8 +77,8 @@ func (g *Game) ChooseRunnersMulti() (bool) {
 
 	if (g.runners[g.id_runner].ManualChoose()) {
 		id := strconv.Itoa(g.id_runner)
-		// couleur := strconv.Itoa(g.runners[g.id_runner].get_colorScheme())
-		g.writeToServer("3"+id+"5")
+		couleur := strconv.Itoa(g.runners[g.id_runner].get_colorScheme())
+		g.writeToServer("3"+id+couleur)
 	}
 
 	select {

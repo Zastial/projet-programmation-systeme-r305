@@ -5,7 +5,6 @@ import (
 	"net"
 	"bufio"
 	"strings"
-	"time"
 	"strconv"
 )
 
@@ -66,29 +65,36 @@ func main() {
 		return
 	}
 
-	runnerschose := [4]bool{false,false,false,false}
-	for i,client := range clientsPresents {	
-		
-		go receiveFromClient(client)
-
-		if string(<-client.receiveChannel) == "305" {	
-			log.Println("OK CA MARCHE BB")
-			runnerschose[i] = true
+	runnerschose := [2]bool{false,false} //A changer pour 4 plus tard
+	runnersColor := [2]string{}
+	for {
+		for i,client := range clientsPresents {	
+			go receiveFromClient(client)
+			if string(<-client.receiveChannel)[:2] == "3"+strconv.Itoa(i) {	
+				log.Println("OK CA MARCHE BB")
+				runnerschose[i] = true
+				runnersColor[i] = string(<-client.receiveChannel)
+			}
+		}
+		c := 0
+		for i := range runnerschose {
+			if runnerschose[i] == true {
+				c++
+			}
+		}
+		if c == len(runnerschose) {
+			writeToClients(clientsPresents,"400")
+			break
 		}
 	}
 
-	// c := 0
-	// for i := range runnerschose {
-	// 	if runnerschose[i] == true {
-	// 		c++
-	// 	}
-	// }
-	// if c == len(runnerschose) {
-	// 	writeToClients(clientsPresents,"400")
-	// }
+	log.Println(runnerschose)
+	log.Println(runnersColor)
 
+	for {
 
-	time.Sleep(10*time.Second)
+	}
+
 }
 
 func writeMessage(client ClientListener, message string) (data int, err error) {
