@@ -46,6 +46,10 @@ func (r *Runner)get_colorScheme() (int){
 	return r.colorScheme
 }
 
+func (r *Runner)set_colorScheme(couleur int) {
+	r.colorScheme = couleur
+}
+
 // ManualUpdate allows to use the keyboard in order to control a runner
 // when the game is in the StateRun state (i.e. during a run)
 func (r *Runner) ManualUpdate() {

@@ -20,6 +20,7 @@ func (g *Game)connexion() {
 		return
 	}
 	g.conn = conn
+	g.good = false
 	go g.readFromServer()
 }
 
@@ -59,7 +60,6 @@ func (g *Game)HandleWelcomeScreenMulti() (bool) {
 		id, _:= strconv.Atoi(message)
 		if id <=4 && id >= 1 {
 			g.id_runner = id-1
-			g.runners[0], g.runners[g.id_runner] = g.runners[g.id_runner], g.runners[0]
 			log.Println("You are the player : ", g.id_runner)
 		}
 
@@ -82,9 +82,9 @@ func (g *Game) ChooseRunnersMulti() (bool) {
 	}
 
 	select {
-	case message := <- g.receiveChannel:
+	case mess := <-g.receiveChannel:
 		log.Println("Waiting for the message..")
-		if message == "400" {
+		if mess == "400" {
 			return true
 		}
 	default:
@@ -92,3 +92,57 @@ func (g *Game) ChooseRunnersMulti() (bool) {
 	}
 	return false
 }
+
+
+func (g *Game) UpdateRunnersMulti() {
+	for i := range g.runners {
+		if i == g.id_runner {
+			g.runners[g.id_runner].ManualUpdate()
+		} else {
+			// g.runners[i].RandomUpdate()
+		}
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// func (g *Game) getCouleurs() {
+
+// 	message := <- g.receiveChannel
+
+// 	words := strings.Fields(message)
+
+// 	var couleur = ""
+// 	for _, word := range words {
+// 		couleur = word
+// 		break
+// 	}
+	
+// 	if string(couleur[0]) == "0" {
+// 		log.Print("C'EST BON CHAKAL")
+// 		g.good = true
+// 	}
+
+// 	return
+// }

@@ -71,7 +71,6 @@ func main() {
 		for i,client := range clientsPresents {	
 			go receiveFromClient(client)
 			if string(<-client.receiveChannel)[:2] == "3"+strconv.Itoa(i) {	
-				log.Println("OK CA MARCHE BB")
 				runnerschose[i] = true
 				runnersColor[i] = string(<-client.receiveChannel)
 			}
@@ -88,8 +87,14 @@ func main() {
 		}
 	}
 
-	log.Println(runnerschose)
-	log.Println(runnersColor)
+	// var newmsg = "" 
+	// for _,val := range runnersColor {
+	// 	newmsg += string(val[1:]) + " "
+	// }
+	
+	// err = writeToClients(clientsPresents, newmsg)
+
+	// time.Sleep(1 * time.Second)
 
 	for {
 

@@ -30,6 +30,7 @@ type Game struct {
 	IP 			string
 	conn		net.Conn
 	receiveChannel chan string
+	good		bool
 }
 
 // These constants define the five possible states of the game
