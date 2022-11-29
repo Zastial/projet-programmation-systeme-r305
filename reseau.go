@@ -6,6 +6,7 @@ import (
 	"bufio"
 	"strings"
 	"strconv"
+	"time"
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
@@ -31,6 +32,7 @@ func (g *Game)writeToServer(message string) {
     if err!=nil{
         return
     }
+	log.Println("Message envoyé au serveur : ", message)
 }
 
 func (g *Game)readFromServer() {
@@ -98,16 +100,68 @@ func (g *Game) UpdateRunnersMulti() {
 	for i := range g.runners {
 		if i == g.id_runner {
 			g.runners[g.id_runner].ManualUpdate()
-		} else {
-			// g.runners[i].RandomUpdate()
+		}
+		if (i != 0 && i != 1) {
+			g.runners[i].RandomUpdate() //test les 2 derniers coureurs
 		}
 	}
 }
 
 
+func (g *Game) CheckArrivalMulti() (finished bool) {
 
+	finished = false
 
+	for i := range g.runners {
 
+		g.runners[i].CheckArrival(&g.f)
+		finished = g.runners[g.id_runner].arrived
+
+		if finished {
+			id := strconv.Itoa(g.id_runner)
+			g.writeToServer("50"+id)
+		}
+	}
+
+	select {
+	case mess := <-g.receiveChannel:
+		log.Println("Waiting for the message..")
+		if mess == "600" {
+			return true
+		}
+	default:
+		break
+	}
+	return false
+}
+
+func (g *Game) HandleResultsMulti() bool {
+
+	if !g.good {
+		if time.Since(g.f.chrono).Milliseconds() > 1000 || inpututil.IsKeyJustPressed(ebiten.KeySpace) {
+			g.resultStep++
+			g.f.chrono = time.Now()
+		}
+	}
+
+	if g.resultStep >= 4 && inpututil.IsKeyJustPressed(ebiten.KeySpace) {
+		g.resultStep = 0
+		id := strconv.Itoa(g.id_runner)
+		g.writeToServer("70"+id)
+		g.good = true
+	}
+	select {
+	case mess := <-g.receiveChannel:
+		log.Println("Waiting for the message..")
+		if mess == "800" {
+			g.good = false
+			return true
+		}
+	default:
+		break
+	}
+	return false
+}
 
 
 

@@ -69,12 +69,14 @@ func main() {
 	runnersColor := [2]string{}
 	for {
 		for i,client := range clientsPresents {	
-			go receiveFromClient(client)
 			if string(<-client.receiveChannel)[:2] == "3"+strconv.Itoa(i) {	
+				log.Println("Le client reçu est :" + "3"+strconv.Itoa(i))
 				runnerschose[i] = true
 				runnersColor[i] = string(<-client.receiveChannel)
 			}
 		}
+
+		log.Println(runnerschose)
 		c := 0
 		for i := range runnerschose {
 			if runnerschose[i] == true {
@@ -83,6 +85,46 @@ func main() {
 		}
 		if c == len(runnerschose) {
 			writeToClients(clientsPresents,"400")
+			break
+		}
+	}
+
+
+	ClientsFinished := [2]bool{false,false}
+	for {
+		for i,client := range clientsPresents {	
+			if string(<-client.receiveChannel) == "50"+strconv.Itoa(i) {	
+				ClientsFinished[i] = true
+			}
+		}
+		c := 0
+		for i := range ClientsFinished {
+			if ClientsFinished[i] == true {
+				c++
+			}
+		}
+		if c == len(ClientsFinished) {
+			writeToClients(clientsPresents,"600")
+			break
+		}
+	}
+
+
+	ClientsWantToRestart := [2]bool{false,false}
+	for {
+		for i,client := range clientsPresents {	
+			if string(<-client.receiveChannel) == "70"+strconv.Itoa(i) {	
+				ClientsWantToRestart[i] = true
+			}
+		}
+		c := 0
+		for i := range ClientsWantToRestart {
+			if ClientsWantToRestart[i] == true {
+				c++
+			}
+		}
+		if c == len(ClientsWantToRestart) {
+			writeToClients(clientsPresents,"800")
 			break
 		}
 	}
@@ -126,8 +168,8 @@ func receiveFromClient(client ClientListener){
 			return
 		}
 		strip := strings.TrimSuffix(s, "\n")
-		log.Println("received message from client : ", strip)
 
+		log.Println("received message from client : ", strip)
 		client.receiveChannel <- strip
 	}
 }

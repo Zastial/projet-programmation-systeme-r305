@@ -129,13 +129,13 @@ func (g *Game) Update() error {
 		}
 	case StateRun:
 		g.UpdateRunnersMulti()
-		finished := g.CheckArrival()
+		finished := g.CheckArrivalMulti()
 		g.UpdateAnimation()
 		if finished {
 			g.state++
 		}
 	case StateResult:
-		done := g.HandleResults()
+		done := g.HandleResultsMulti()
 		if done {
 			g.Reset()
 			g.state = StateLaunchRun
