@@ -15,8 +15,6 @@ type ClientListener struct {
 }
 
 var clientsPresents []ClientListener
-var messages = []string{}
-
 
 func main() {
 
@@ -68,15 +66,34 @@ func main() {
 		return
 	}
 
-	runnerschose := [2]bool{false,false} //A changer pour 4 plus tard
-	runnersColor := [2]string{}
+
+
+	chooseRunner()
+
+	// var newmsg = "" 
+	// for _,val := range runnersColor {
+	// 	newmsg += string(val[1:]) + " "
+	// }
+	
+	// err = writeToClients(clientsPresents, newmsg)
+
+	// time.Sleep(1 * time.Second)
 
 	for {
+		checkArrival()
 
-		log.Println("ok")
-		for _,message := range messages {
-			log.Println("Le message reçu est : " + message)
-		}
+		handleResults()
+	}
+
+}
+
+
+func chooseRunner() {
+		
+	runnerschose := [2]bool{false,false} //A changer pour 4 plus tard
+	runnersColor := [2]string{}
+	
+	for {
 
 		for i,client := range clientsPresents {
 			if string(<-client.receiveChannel)[:2] == "3"+strconv.Itoa(i) {
@@ -97,8 +114,10 @@ func main() {
 			break
 		}
 	}
+} 
 
 
+func checkArrival() {
 	ClientsFinished := [2]bool{false,false}
 	for {
 		for i,client := range clientsPresents {	
@@ -117,8 +136,9 @@ func main() {
 			break
 		}
 	}
+}
 
-
+func handleResults() {
 	ClientsWantToRestart := [2]bool{false,false}
 	for {
 		for i,client := range clientsPresents {	
@@ -137,21 +157,30 @@ func main() {
 			break
 		}
 	}
-
-	// var newmsg = "" 
-	// for _,val := range runnersColor {
-	// 	newmsg += string(val[1:]) + " "
-	// }
-	
-	// err = writeToClients(clientsPresents, newmsg)
-
-	// time.Sleep(1 * time.Second)
-
-	for {
-
-	}
-
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 func writeMessage(client ClientListener, message string) (data int, err error) {
 	data, err = client.conn.Write([]byte(message+"\n"))
@@ -178,8 +207,6 @@ func receiveFromClient(client ClientListener){
 			return
 		}
 		strip := strings.TrimSuffix(s, "\n")
-
-		messages = append(messages, strip)
 
 		log.Println("received message from client : ", strip)
 		client.receiveChannel <- strip
