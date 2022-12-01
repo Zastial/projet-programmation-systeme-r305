@@ -26,12 +26,14 @@ func (g *Game)connexion() {
 }
 
 func (g *Game)writeToServer(message string) {
-    writer := bufio.NewWriter(g.conn)
-    _, err := writer.WriteString(message+"\n")
-    writer.Flush()
-    if err!=nil{
-        return
-    }
+	for i:=0;i<2;i++ {
+		writer := bufio.NewWriter(g.conn)
+		_, err := writer.WriteString(message+"\n")
+		writer.Flush()
+		if err!=nil{
+			return
+		}
+	}	
 	log.Println("Message envoyé au serveur : ", message)
 }
 
@@ -77,16 +79,18 @@ func (g *Game)HandleWelcomeScreenMulti() (bool) {
 
 func (g *Game) ChooseRunnersMulti() (bool) {
 
-	if (g.runners[g.id_runner].ManualChoose()) {
+	if (g.runners[g.id_runner].ManualChoose() && !g.good) {
 		id := strconv.Itoa(g.id_runner)
 		couleur := strconv.Itoa(g.runners[g.id_runner].get_colorScheme())
 		g.writeToServer("3"+id+couleur)
+		g.good = true
 	}
 
 	select {
 	case mess := <-g.receiveChannel:
 		log.Println("Waiting for the message..")
 		if mess == "400" {
+			g.good = false
 			return true
 		}
 	default:
@@ -117,9 +121,10 @@ func (g *Game) CheckArrivalMulti() (finished bool) {
 		g.runners[i].CheckArrival(&g.f)
 		finished = g.runners[g.id_runner].arrived
 
-		if finished {
+		if finished && !g.good{
 			id := strconv.Itoa(g.id_runner)
 			g.writeToServer("50"+id)
+			g.good = true
 		}
 	}
 
@@ -127,6 +132,7 @@ func (g *Game) CheckArrivalMulti() (finished bool) {
 	case mess := <-g.receiveChannel:
 		log.Println("Waiting for the message..")
 		if mess == "600" {
+			g.good = false
 			return true
 		}
 	default:

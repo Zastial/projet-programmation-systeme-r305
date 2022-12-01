@@ -15,8 +15,11 @@ type ClientListener struct {
 }
 
 var clientsPresents []ClientListener
+var messages = []string{}
+
 
 func main() {
+
 	listener, err := net.Listen("tcp", ":8080")
 	if err != nil {
 		log.Println("listen error:", err)
@@ -67,10 +70,16 @@ func main() {
 
 	runnerschose := [2]bool{false,false} //A changer pour 4 plus tard
 	runnersColor := [2]string{}
+
 	for {
-		for i,client := range clientsPresents {	
-			if string(<-client.receiveChannel)[:2] == "3"+strconv.Itoa(i) {	
-				log.Println("Le client reçu est :" + "3"+strconv.Itoa(i))
+
+		log.Println("ok")
+		for _,message := range messages {
+			log.Println("Le message reçu est : " + message)
+		}
+
+		for i,client := range clientsPresents {
+			if string(<-client.receiveChannel)[:2] == "3"+strconv.Itoa(i) {
 				runnerschose[i] = true
 				runnersColor[i] = string(<-client.receiveChannel)
 			}
@@ -146,6 +155,7 @@ func main() {
 
 func writeMessage(client ClientListener, message string) (data int, err error) {
 	data, err = client.conn.Write([]byte(message+"\n"))
+	log.Println("Le message envoyé est : "+message)
 	return data,err
 }
 
@@ -168,6 +178,8 @@ func receiveFromClient(client ClientListener){
 			return
 		}
 		strip := strings.TrimSuffix(s, "\n")
+
+		messages = append(messages, strip)
 
 		log.Println("received message from client : ", strip)
 		client.receiveChannel <- strip
