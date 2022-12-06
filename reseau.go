@@ -105,9 +105,6 @@ func (g *Game) UpdateRunnersMulti() {
 		if i == g.id_runner {
 			g.runners[g.id_runner].ManualUpdate()
 		}
-		if (i != 0 && i != 1) {
-			g.runners[i].RandomUpdate() //test les 2 derniers coureurs
-		}
 	}
 }
 
@@ -117,9 +114,10 @@ func (g *Game) CheckArrivalMulti() (finished bool) {
 	finished = false
 
 	for i := range g.runners {
-
 		g.runners[i].CheckArrival(&g.f)
 		finished = g.runners[g.id_runner].arrived
+
+		// xpos, ypos := g.runners[g.id_runner].get
 
 		if finished && !g.good{
 			id := strconv.Itoa(g.id_runner)

@@ -25,7 +25,7 @@ func main() {
 	}
 	defer listener.Close()
 
-	var maxClients = 2
+	var maxClients = 4
 
 	for(len(clientsPresents) < maxClients) {
 		conn, err := listener.Accept()
@@ -90,8 +90,8 @@ func main() {
 
 func chooseRunner() {
 		
-	runnerschose := [2]bool{false,false} //A changer pour 4 plus tard
-	runnersColor := [2]string{}
+	runnerschose := [4]bool{} //A changer pour 4 plus tard
+	runnersColor := [4]string{}
 	
 	for {
 
@@ -118,7 +118,7 @@ func chooseRunner() {
 
 
 func checkArrival() {
-	ClientsFinished := [2]bool{false,false}
+	ClientsFinished := [4]bool{}
 	for {
 		for i,client := range clientsPresents {	
 			if string(<-client.receiveChannel) == "50"+strconv.Itoa(i) {	
@@ -139,7 +139,7 @@ func checkArrival() {
 }
 
 func handleResults() {
-	ClientsWantToRestart := [2]bool{false,false}
+	ClientsWantToRestart := [4]bool{}
 	for {
 		for i,client := range clientsPresents {	
 			if string(<-client.receiveChannel) == "70"+strconv.Itoa(i) {	

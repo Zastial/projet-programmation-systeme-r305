@@ -50,6 +50,10 @@ func (r *Runner)set_colorScheme(couleur int) {
 	r.colorScheme = couleur
 }
 
+// func (r *Runner)get_pos() (float64,float64) {
+// 	return r.xpos, r.ypos
+// }
+
 // ManualUpdate allows to use the keyboard in order to control a runner
 // when the game is in the StateRun state (i.e. during a run)
 func (r *Runner) ManualUpdate() {
