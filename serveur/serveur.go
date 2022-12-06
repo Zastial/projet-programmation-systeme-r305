@@ -116,6 +116,38 @@ func chooseRunner() {
 	}
 } 
 
+func checkPos() {
+	ancienMess0 := ""
+	ancienMess1 := ""
+	ancienMess2 := ""
+	ancienMess3 := ""
+	
+	for {
+		select {
+		case mess := <-clientsPresents[0].receiveChannel:
+			if(mess != ancienMess0) {
+				log.Println("0 : "+ string(mess[3:]))
+			}
+			ancienMess0 = mess
+
+		case mess := <-clientsPresents[1].receiveChannel:
+			if(mess != ancienMess1) {
+				log.Println("1 : "+ string(mess[3:]))
+			}
+			ancienMess1 = mess
+		case mess := <-clientsPresents[2].receiveChannel:
+			if(mess != ancienMess2) {
+				log.Println("2 : "+ string(mess[3:]))
+			}
+			ancienMess2 = mess
+		case mess := <-clientsPresents[3].receiveChannel:
+			if(mess != ancienMess3) {
+				log.Println("3 : "+ string(mess[3:]))
+			}
+			ancienMess3 = mess		
+		}
+	}
+}
 
 func checkArrival() {
 	ClientsFinished := [4]bool{}
@@ -124,6 +156,7 @@ func checkArrival() {
 			if string(<-client.receiveChannel) == "50"+strconv.Itoa(i) {	
 				ClientsFinished[i] = true
 			}
+			go checkPos()
 		}
 		c := 0
 		for i := range ClientsFinished {
@@ -208,7 +241,7 @@ func receiveFromClient(client ClientListener){
 		}
 		strip := strings.TrimSuffix(s, "\n")
 
-		log.Println("received message from client : ", strip)
+		// log.Println("received message from client : ", strip)
 		client.receiveChannel <- strip
 	}
 }

@@ -7,6 +7,7 @@ import (
 	"strings"
 	"strconv"
 	"time"
+	"fmt"
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
@@ -26,8 +27,8 @@ func (g *Game)connexion() {
 }
 
 func (g *Game)writeToServer(message string) {
+	writer := bufio.NewWriter(g.conn)
 	for i:=0;i<2;i++ {
-		writer := bufio.NewWriter(g.conn)
 		_, err := writer.WriteString(message+"\n")
 		writer.Flush()
 		if err!=nil{
@@ -112,15 +113,24 @@ func (g *Game) UpdateRunnersMulti() {
 func (g *Game) CheckArrivalMulti() (finished bool) {
 
 	finished = false
+	id := strconv.Itoa(g.id_runner)
 
 	for i := range g.runners {
 		g.runners[i].CheckArrival(&g.f)
 		finished = g.runners[g.id_runner].arrived
 
-		// xpos, ypos := g.runners[g.id_runner].get
+		// xpos, ypos := g.runners[g.id_runner].get_pos()
+		// log.Print("Les positions du personnage sont :", xpos, ypos)
+
+		if (inpututil.IsKeyJustPressed(ebiten.KeySpace)) {
+			speed := g.runners[g.id_runner].get_speed()
+			s := fmt.Sprintf("%f", speed)
+			g.writeToServer("51"+id+s)
+		}
+		//contrairement à la position qui même si elle est envoyée plusieurs fois ne change pas,
+		//la vitesse peut être additionée trop de fois, il faut donc vérifier que le joueur appuie bien sur la barre espace
 
 		if finished && !g.good{
-			id := strconv.Itoa(g.id_runner)
 			g.writeToServer("50"+id)
 			g.good = true
 		}
@@ -166,17 +176,6 @@ func (g *Game) HandleResultsMulti() bool {
 	}
 	return false
 }
-
-
-
-
-
-
-
-
-
-
-
 
 
 
