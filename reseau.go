@@ -68,7 +68,6 @@ func (g *Game)HandleWelcomeScreenMulti() (bool) {
 			log.Println("You are the player : ", g.id_runner)
 		}
 
-		log.Println("Waiting for the message..")
 		if message == "200" {
 			return true
 		}
@@ -89,7 +88,6 @@ func (g *Game) ChooseRunnersMulti() (bool) {
 
 	select {
 	case mess := <-g.receiveChannel:
-		log.Println("Waiting for the message..")
 		if mess == "400" {
 			g.good = false
 			return true
@@ -109,6 +107,27 @@ func (g *Game) UpdateRunnersMulti() {
 	}
 }
 
+
+func (g *Game) checkPosPlayers() {
+	for {
+		for i := range g.runners {
+			select {
+			case msg := <-g.receiveChannel :
+				log.Println(string(msg[:2]))
+				if string(msg[:2]) == "9"+strconv.Itoa(i) {
+		
+					log.Println(strconv.Atoi(string(msg[1])))
+					log.Println(strconv.ParseFloat(msg[2:], 64))
+			
+					s, _ := strconv.ParseFloat(msg[2:], 64)
+					id_runner, _ := strconv.Atoi(string(msg[1]))
+					g.runners[id_runner].set_speed(s)
+					g.runners[id_runner].UpdatePos()
+				}
+			}
+		}
+	}
+}
 
 func (g *Game) CheckArrivalMulti() (finished bool) {
 
@@ -134,11 +153,13 @@ func (g *Game) CheckArrivalMulti() (finished bool) {
 			g.writeToServer("50"+id)
 			g.good = true
 		}
+
 	}
+
+	go g.checkPosPlayers()
 
 	select {
 	case mess := <-g.receiveChannel:
-		log.Println("Waiting for the message..")
 		if mess == "600" {
 			g.good = false
 			return true
@@ -166,7 +187,6 @@ func (g *Game) HandleResultsMulti() bool {
 	}
 	select {
 	case mess := <-g.receiveChannel:
-		log.Println("Waiting for the message..")
 		if mess == "800" {
 			g.good = false
 			return true

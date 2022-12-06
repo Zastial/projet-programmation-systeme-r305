@@ -127,22 +127,41 @@ func checkPos() {
 		case mess := <-clientsPresents[0].receiveChannel:
 			if(mess != ancienMess0) {
 				log.Println("0 : "+ string(mess[3:]))
+				for i := range clientsPresents {
+					if i != 0 {
+						writeMessage(clientsPresents[i],"9"+mess[2:])
+					}
+				}
 			}
 			ancienMess0 = mess
-
 		case mess := <-clientsPresents[1].receiveChannel:
 			if(mess != ancienMess1) {
 				log.Println("1 : "+ string(mess[3:]))
+				for i := range clientsPresents {
+					if i != 1 {
+						writeMessage(clientsPresents[i],"9"+mess[2:])
+					}
+				}
 			}
 			ancienMess1 = mess
 		case mess := <-clientsPresents[2].receiveChannel:
 			if(mess != ancienMess2) {
 				log.Println("2 : "+ string(mess[3:]))
+				for i := range clientsPresents {
+					if i != 2 {
+						writeMessage(clientsPresents[i],"9"+mess[2:])
+					}
+				}
 			}
 			ancienMess2 = mess
 		case mess := <-clientsPresents[3].receiveChannel:
 			if(mess != ancienMess3) {
 				log.Println("3 : "+ string(mess[3:]))
+				for i := range clientsPresents {
+					if i != 3 {
+						writeMessage(clientsPresents[i],"9"+mess[2:])
+					}
+				}
 			}
 			ancienMess3 = mess		
 		}

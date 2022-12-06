@@ -50,6 +50,10 @@ func (r *Runner)set_colorScheme(couleur int) {
 	r.colorScheme = couleur
 }
 
+func (r *Runner)set_speed(fast float64) {
+	r.speed = fast
+}
+
 func (r *Runner)get_pos() (float64,float64) {
 	return r.xpos, r.ypos
 }
