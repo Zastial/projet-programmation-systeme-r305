@@ -90,7 +90,7 @@ func main() {
 
 func chooseRunner() {
 		
-	runnerschose := [4]bool{} //A changer pour 4 plus tard
+	runnerschose := [4]bool{}
 	runnersColor := [4]string{}
 	
 	for {
@@ -116,66 +116,66 @@ func chooseRunner() {
 	}
 } 
 
-func checkPos() {
-	ancienMess0 := ""
-	ancienMess1 := ""
-	ancienMess2 := ""
-	ancienMess3 := ""
+// func checkPos() {
+// 	ancienMess0 := ""
+// 	ancienMess1 := ""
+// 	ancienMess2 := ""
+// 	ancienMess3 := ""
 	
-	for {
-		select {
-		case mess := <-clientsPresents[0].receiveChannel:
-			if(mess != ancienMess0) {
-				log.Println("0 : "+ string(mess[3:]))
-				for i := range clientsPresents {
-					if i != 0 {
-						writeMessage(clientsPresents[i],"9"+mess[2:])
-					}
-				}
-			}
-			ancienMess0 = mess
-		case mess := <-clientsPresents[1].receiveChannel:
-			if(mess != ancienMess1) {
-				log.Println("1 : "+ string(mess[3:]))
-				for i := range clientsPresents {
-					if i != 1 {
-						writeMessage(clientsPresents[i],"9"+mess[2:])
-					}
-				}
-			}
-			ancienMess1 = mess
-		case mess := <-clientsPresents[2].receiveChannel:
-			if(mess != ancienMess2) {
-				log.Println("2 : "+ string(mess[3:]))
-				for i := range clientsPresents {
-					if i != 2 {
-						writeMessage(clientsPresents[i],"9"+mess[2:])
-					}
-				}
-			}
-			ancienMess2 = mess
-		case mess := <-clientsPresents[3].receiveChannel:
-			if(mess != ancienMess3) {
-				log.Println("3 : "+ string(mess[3:]))
-				for i := range clientsPresents {
-					if i != 3 {
-						writeMessage(clientsPresents[i],"9"+mess[2:])
-					}
-				}
-			}
-			ancienMess3 = mess		
-		}
-	}
-}
+// 	for {
+// 		select {
+// 		case mess := <-clientsPresents[0].receiveChannel:
+// 			if(mess != ancienMess0) {
+// 				log.Println("0 : "+ string(mess[3:]))
+// 				for i := range clientsPresents {
+// 					if i != 0 {
+// 						writeMessage(clientsPresents[i],"9"+mess[2:])
+// 					}
+// 				}
+// 			}
+// 			ancienMess0 = mess
+// 		case mess := <-clientsPresents[1].receiveChannel:
+// 			if(mess != ancienMess1) {
+// 				log.Println("1 : "+ string(mess[3:]))
+// 				for i := range clientsPresents {
+// 					if i != 1 {
+// 						writeMessage(clientsPresents[i],"9"+mess[2:])
+// 					}
+// 				}
+// 			}
+// 			ancienMess1 = mess
+// 		case mess := <-clientsPresents[2].receiveChannel:
+// 			if(mess != ancienMess2) {
+// 				log.Println("2 : "+ string(mess[3:]))
+// 				for i := range clientsPresents {
+// 					if i != 2 {
+// 						writeMessage(clientsPresents[i],"9"+mess[2:])
+// 					}
+// 				}
+// 			}
+// 			ancienMess2 = mess
+// 		case mess := <-clientsPresents[3].receiveChannel:
+// 			if(mess != ancienMess3) {
+// 				log.Println("3 : "+ string(mess[3:]))
+// 				for i := range clientsPresents {
+// 					if i != 3 {
+// 						writeMessage(clientsPresents[i],"9"+mess[2:])
+// 					}
+// 				}
+// 			}
+// 			ancienMess3 = mess		
+// 		}
+// 	}
+// }
 
 func checkArrival() {
 	ClientsFinished := [4]bool{}
+	// go checkPos()
 	for {
 		for i,client := range clientsPresents {	
 			if string(<-client.receiveChannel) == "50"+strconv.Itoa(i) {	
 				ClientsFinished[i] = true
 			}
-			go checkPos()
 		}
 		c := 0
 		for i := range ClientsFinished {
@@ -215,25 +215,6 @@ func handleResults() {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 func writeMessage(client ClientListener, message string) (data int, err error) {
 	data, err = client.conn.Write([]byte(message+"\n"))
 	log.Println("Le message envoyé est : "+message)
@@ -260,7 +241,7 @@ func receiveFromClient(client ClientListener){
 		}
 		strip := strings.TrimSuffix(s, "\n")
 
-		// log.Println("received message from client : ", strip)
+		log.Println("received message from client : ", strip)
 		client.receiveChannel <- strip
 	}
 }
