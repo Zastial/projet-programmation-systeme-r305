@@ -13,8 +13,6 @@ import (
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 )
 
-var ip_reseau string
-
 func (g *Game)connexion() {
 	conn, err := net.Dial("tcp", g.IP + ":8080")
 	if err != nil {

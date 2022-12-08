@@ -22,10 +22,9 @@ func main() {
 
 	var getTPS bool
 	flag.BoolVar(&getTPS, "tps", false, "Afficher le nombre d'appel à Update par seconde")
-	flag.Parse()
 
 	var ip string
-	flag.StringVar(&ip, "serverip", "localhost", "IP du serveur")
+	flag.StringVar(&ip, "ip", "localhost", "IP du serveur")
 	flag.Parse()
 
 	ebiten.SetWindowSize(screenWidth, screenHeight)
