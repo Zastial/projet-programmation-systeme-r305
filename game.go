@@ -22,6 +22,7 @@ type Game struct {
 	state       int           // Current state of the game
 	runnerImage *ebiten.Image // Image with all the sprites of the runners
 	runners     [4]Runner     // The four runners used in the game
+	nbRunner   int           // Number of runners in the game
 	f           Field         // The running field
 	launchStep  int           // Current step in StateLaunchRun state
 	resultStep  int           // Current step in StateResult state
@@ -61,7 +62,7 @@ func InitGame() (g Game) {
 	for i := range g.runners {
 		g.runners[i] = Runner{
 			xpos: start, ypos: 50 + float64(i*20),
-			maxFrameInterval: frameInterval, //changé les frame de base à 0 pour le max pour tt le monde
+			maxFrameInterval: frameInterval, //changé les frames de base à 0 pour le max pour tt le monde
 			colorScheme:      0,
 		}
 	}
@@ -73,7 +74,7 @@ func InitGame() (g Game) {
 		chrono:   time.Now(),
 	}
 
-	g.receiveChannel = make(chan string, 1)
+	g.receiveChannel = make(chan string, 100)
 
 	return g
 }

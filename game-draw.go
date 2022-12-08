@@ -16,6 +16,7 @@ import (
 	"fmt"
 	"image"
 	"image/color"
+	"strconv"
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
@@ -35,10 +36,13 @@ func (g *Game) DrawWelcomeScreen(screen *ebiten.Image) {
 		screenWidth/2-60,
 		screenHeight/2+10,
 	)
-	// ebitenutil.DebugPrintAt(
-	// 	screen,
-	// 	fmt.Sprint("Joueurs connectés : ")
-	// )
+
+	ebitenutil.DebugPrintAt(
+		screen,
+		fmt.Sprint("Joueurs connectés : " + strconv.Itoa(g.nbRunner)),
+		screenWidth/2-60,
+		screenHeight/2+30,
+	)
 }
 
 // DrawSelectScreen displays the runner selection screen in the game window

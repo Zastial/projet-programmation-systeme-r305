@@ -77,18 +77,72 @@ func (g *Game)HandleWelcomeScreenMulti() (bool) {
 	return false
 }
 
+func (g *Game) runnersColor() {
+
+	id := strconv.Itoa(g.id_runner)
+
+	select {
+	case mess := <-g.receiveChannel:
+		for couleur:=1;couleur<=8;couleur++ {
+			if string(mess) == "4"+strconv.Itoa(0)+strconv.Itoa(couleur) && id != "0" {
+				g.runners[0].set_colorScheme(couleur-1)
+			}
+		}
+	case mess := <-g.receiveChannel:
+		for couleur:=1;couleur<=8;couleur++ {
+			if string(mess) == "4"+strconv.Itoa(1)+strconv.Itoa(couleur) && id != "1" {
+				g.runners[1].set_colorScheme(couleur-1)
+			}
+		}
+	case mess := <-g.receiveChannel:
+		for couleur:=1;couleur<=8;couleur++ {
+			if string(mess) == "4"+strconv.Itoa(2)+strconv.Itoa(couleur) && id != "2" {
+				g.runners[2].set_colorScheme(couleur-1)
+			}
+		}
+	case mess := <-g.receiveChannel:
+		for couleur:=1;couleur<=8;couleur++ {
+			if string(mess) == "4"+strconv.Itoa(3)+strconv.Itoa(couleur) && id != "3" {
+				g.runners[3].set_colorScheme(couleur-1)
+			}
+		}
+	default:
+		return
+	}
+	
+}
+
 func (g *Game) ChooseRunnersMulti() (bool) {
 
+	// go g.runnersColor()
+
+	id := strconv.Itoa(g.id_runner)
+
+	// if ebiten.IsKeyPressed(ebiten.KeyRight) && !g.good {
+	// 	colorSchemeCurrentlyOn := strconv.Itoa(g.runners[g.id_runner].get_colorScheme()+1)
+	// 	g.writeToServer("4"+id+colorSchemeCurrentlyOn)	
+	// }
+	// if ebiten.IsKeyPressed(ebiten.KeyLeft) && !g.good {
+	// 	colorSchemeCurrentlyOn := strconv.Itoa(g.runners[g.id_runner].get_colorScheme()+1)
+	// 	g.writeToServer("4"+id+colorSchemeCurrentlyOn)	
+	// }
+
 	if (g.runners[g.id_runner].ManualChoose() && !g.good) {
-		id := strconv.Itoa(g.id_runner)
 		couleur := strconv.Itoa(g.runners[g.id_runner].get_colorScheme())
 		g.writeToServer("3"+id+couleur)
 		g.good = true
 	}
-
+	
 	select {
 	case mess := <-g.receiveChannel:
-		if mess == "400" {
+		log.Println("Message reçu : ", string(mess))
+		if mess[:3] == "400" {
+			for i := range g.runners {
+				if i != g.id_runner {
+					id, _ := strconv.Atoi(string(mess[3+i]))
+					g.runners[i].set_colorScheme(id)
+				}
+			}
 			g.good = false
 			return true
 		}
@@ -109,54 +163,80 @@ func (g *Game) UpdateRunnersMulti() {
 
 
 func (g *Game) checkPosPlayers() {
-	for {
-		for i := range g.runners {
-			select {
-			case msg := <-g.receiveChannel :
-				log.Println(string(msg[:2]))
-				if string(msg[:2]) == "9"+strconv.Itoa(i) {
-		
-					log.Println(strconv.Atoi(string(msg[1])))
-					log.Println(strconv.ParseFloat(msg[2:], 64))
-			
-					s, _ := strconv.ParseFloat(msg[2:], 64)
-					id_runner, _ := strconv.Atoi(string(msg[1]))
-					g.runners[id_runner].set_speed(s)
-					g.runners[id_runner].UpdatePos()
-				}
+
+	// for i := range g.runners {
+	// 	if i != g.id_runner {
+	// 		g.runners[i].UpdateSpeed(false)
+	// 	}
+	// }
+
+	fmt.Println("oguidfg")
+
+	select {
+	case msg := <-g.receiveChannel :
+		if string(msg[:2]) == "90" && g.id_runner != 0 {
+			playerSpeed,_ := strconv.ParseFloat(string(msg[2:]), 64)
+			if string(msg) != "" || string(msg) != " " {
+				g.runners[0].set_speed(playerSpeed)
+				g.runners[0].UpdateSpeed(true)
+				g.runners[0].UpdatePos()
 			}
 		}
+	case msg := <-g.receiveChannel :
+		if string(msg[:2]) == "91" && g.id_runner != 1 {
+			playerSpeed,_ := strconv.ParseFloat(string(msg[2:]), 64)
+			if string(msg) != "" || string(msg) != " " {
+				g.runners[1].set_speed(playerSpeed)
+				g.runners[1].UpdateSpeed(true)
+				g.runners[1].UpdatePos()
+			}
+		}
+	case msg := <-g.receiveChannel :
+		if string(msg[:2]) == "92" && g.id_runner != 2 {
+			playerSpeed,_ := strconv.ParseFloat(string(msg[2:]), 64)
+			if string(msg) != "" || string(msg) != " " {
+				g.runners[2].set_speed(playerSpeed)
+				g.runners[2].UpdateSpeed(true)
+				g.runners[2].UpdatePos()
+			}
+		}
+	case msg := <-g.receiveChannel :
+		if string(msg[:2]) == "93" && g.id_runner != 3 {
+			playerSpeed,_ := strconv.ParseFloat(string(msg[2:]), 64)
+			if string(msg) != "" || string(msg) != " " {
+				g.runners[3].set_speed(playerSpeed)
+				g.runners[3].UpdateSpeed(true)
+				g.runners[3].UpdatePos()
+			}
+		}
+	default:
+		break
 	}
+	
 }
 
 func (g *Game) CheckArrivalMulti() (finished bool) {
 
-	finished = false
+	// g.checkPosPlayers()
+
+	finished = g.runners[g.id_runner].arrived
 	id := strconv.Itoa(g.id_runner)
+	// speed := g.runners[g.id_runner].get_speed()
 
 	for i := range g.runners {
 		g.runners[i].CheckArrival(&g.f)
-		finished = g.runners[g.id_runner].arrived
-
-		// xpos, ypos := g.runners[g.id_runner].get_pos()
-		// log.Print("Les positions du personnage sont :", xpos, ypos)
-
-		if (inpututil.IsKeyJustPressed(ebiten.KeySpace)) {
-			speed := g.runners[g.id_runner].get_speed()
-			s := fmt.Sprintf("%f", speed)
-			g.writeToServer("51"+id+s)
-		}
-		//contrairement à la position qui même si elle est envoyée plusieurs fois ne change pas,
-		//la vitesse peut être additionée trop de fois, il faut donc vérifier que le joueur appuie bien sur la barre espace
-
-		if finished && !g.good{
-			g.writeToServer("50"+id)
-			g.good = true
-		}
-
 	}
 
-	go g.checkPosPlayers()
+	// if (!finished && inpututil.IsKeyJustPressed(ebiten.KeySpace)) {
+	// 	s := fmt.Sprintf("%f", speed)
+	// 	g.writeToServer("51"+id+s)
+	// }
+
+	finished = g.runners[g.id_runner].arrived
+	if finished && !g.good {
+		g.writeToServer("50"+id)
+		g.good = true
+	}
 
 	select {
 	case mess := <-g.receiveChannel:
