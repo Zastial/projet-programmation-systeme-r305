@@ -39,7 +39,7 @@ func (g *Game) DrawWelcomeScreen(screen *ebiten.Image) {
 
 	ebitenutil.DebugPrintAt(
 		screen,
-		fmt.Sprint("Joueurs connectés : " + strconv.Itoa(g.nbRunner)),
+		fmt.Sprint("Joueurs connectés : " + strconv.Itoa(g.nbRunner)+"/4"),
 		screenWidth/2-60,
 		screenHeight/2+30,
 	)

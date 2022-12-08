@@ -65,6 +65,7 @@ func (g *Game)HandleWelcomeScreenMulti() (bool) {
 		id, _:= strconv.Atoi(message)
 		if id <=4 && id >= 1 {
 			g.id_runner = id-1
+			g.nbRunner = id
 			log.Println("You are the player : ", g.id_runner)
 		}
 
