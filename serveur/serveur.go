@@ -126,9 +126,10 @@ func playerSelector() {
 }
 
 func chooseRunner() {
-		
+	emptyChannel()
+
 	runnerschose := [4]bool{}
-	runnersColor := ""
+	runnersColor := [4]string{}
 
 
 	ancienMess0 := ""
@@ -144,33 +145,35 @@ func chooseRunner() {
 		case mess := <-clientsPresents[0].receiveChannel:
 			if string(mess)[:2] == "3"+strconv.Itoa(0) && mess != ancienMess0{
 				runnerschose[0] = true
-				runnersColor += string(string(mess)[2])
+				runnersColor[0] = string(string(mess)[2])
 				ancienMess0 = mess
 			}
 		case mess := <-clientsPresents[1].receiveChannel:
 			if string(mess)[:2] == "3"+strconv.Itoa(1) && mess != ancienMess1 {
 				runnerschose[1] = true
-				runnersColor += string(string(mess)[2])
+				runnersColor[1] = string(string(mess)[2])
 				ancienMess1 = mess
 			}
 		case mess := <-clientsPresents[2].receiveChannel:
 			if string(mess)[:2] == "3"+strconv.Itoa(2) && mess != ancienMess2 {
 				runnerschose[2] = true
-				runnersColor += string(string(mess)[2])
+				runnersColor[2] = string(string(mess)[2])
 				ancienMess2 = mess
 			}
 		case mess := <-clientsPresents[3].receiveChannel:
 			if string(mess)[:2] == "3"+strconv.Itoa(3) && mess != ancienMess3 {
 				runnerschose[3] = true
-				runnersColor += string(string(mess)[2])
+				runnersColor[3] = string(string(mess)[2])
 				ancienMess3 = mess
 			}
 		}
 
 		c := 0
+		runnersColorString :=""
 		for i := range runnerschose {
 			if runnerschose[i] == true {
 				c++
+				runnersColorString += runnersColor[i]
 			}
 		}
 
@@ -178,7 +181,7 @@ func chooseRunner() {
 		log.Println(c)
 		log.Println(runnersColor)
 		if c == len(runnerschose) {
-			writeToClients(clientsPresents,"400"+runnersColor)
+			writeToClients(clientsPresents,"400"+runnersColorString)
 			return
 		}
 	}
@@ -194,40 +197,24 @@ func checkPos() {
 	select {
 	case mess := <-clientsPresents[0].receiveChannel:
 		if mess != ancienMess0 && string(mess[:2]) == "51" {
-			for i := range clientsPresents {
-				if i != 0 {
-					writeMessage(clientsPresents[i],"9"+mess[2:])
-				}
-			}
+			writeToClients(clientsPresents,"9"+mess[2:])
+			ancienMess0 = mess
 		}
-		ancienMess0 = mess
 	case mess := <-clientsPresents[1].receiveChannel:
 		if mess != ancienMess1 && string(mess[:2]) == "51" {
-			for i := range clientsPresents {
-				if i != 1 {
-					writeMessage(clientsPresents[i],"9"+mess[2:])
-				}
-			}
+			writeToClients(clientsPresents,"9"+mess[2:])
+			ancienMess1 = mess
 		}
-		ancienMess1 = mess
 	case mess := <-clientsPresents[2].receiveChannel:
 		if mess != ancienMess2 && string(mess[:2]) == "51" {
-			for i := range clientsPresents {
-				if i != 2 {
-					writeMessage(clientsPresents[i],"9"+mess[2:])
-				}
-			}
+			writeToClients(clientsPresents,"9"+mess[2:])
+			ancienMess2 = mess
 		}
-		ancienMess2 = mess
 	case mess := <-clientsPresents[3].receiveChannel:
 		if mess != ancienMess3 && string(mess[:2]) == "51" {
-			for i := range clientsPresents {
-				if i != 3 {
-					writeMessage(clientsPresents[i],"9"+mess[2:])
-				}
-			}
+			writeToClients(clientsPresents,"9"+mess[2:])
+			ancienMess3 = mess
 		}
-		ancienMess3 = mess
 	default:
 		break
 	}
@@ -235,16 +222,38 @@ func checkPos() {
 
 func checkArrival() {
 
+	emptyChannel()
 	ClientsFinished := [4]bool{}
-
-	// checkPos()
+	ancienMess0 := ""
+	ancienMess1 := ""
+	ancienMess2 := ""
+	ancienMess3 := ""
 
 	for {
-		for i,client := range clientsPresents {	
-			if string(<-client.receiveChannel) == "50"+strconv.Itoa(i) {	
-				ClientsFinished[i] = true
-				client.good = true
+
+		checkPos()
+
+		select{
+		case mess := <-clientsPresents[0].receiveChannel:
+			if string(mess[:3]) == "500" && mess != ancienMess0{
+				ClientsFinished[0] = true
 			}
+			ancienMess0 = mess
+		case mess := <-clientsPresents[1].receiveChannel:
+			if string(mess[:3]) == "501" && mess != ancienMess1 {
+				ClientsFinished[1] = true
+			}
+			ancienMess1 = mess
+		case mess := <-clientsPresents[2].receiveChannel:
+			if string(mess[:3]) == "502" && mess != ancienMess2 {
+				ClientsFinished[2] = true
+			}
+			ancienMess2 = mess
+		case mess := <-clientsPresents[3].receiveChannel:
+			if string(mess[:3]) == "503" && mess != ancienMess3 {
+				ClientsFinished[3] = true
+			}
+			ancienMess3 = mess
 		}
 
 		log.Println(ClientsFinished)

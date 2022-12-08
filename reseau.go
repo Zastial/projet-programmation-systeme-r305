@@ -177,8 +177,6 @@ func (g *Game) checkPosPlayers() {
 	// 	}
 	// }
 
-	fmt.Println("oguidfg")
-
 	select {
 	case msg := <-g.receiveChannel :
 		if string(msg[:2]) == "90" && g.id_runner != 0 {
@@ -224,23 +222,25 @@ func (g *Game) checkPosPlayers() {
 
 func (g *Game) CheckArrivalMulti() (finished bool) {
 
-	// g.checkPosPlayers()
+	if !g.good {
+		g.checkPosPlayers()
+	}
 
 	finished = g.runners[g.id_runner].arrived
 	id := strconv.Itoa(g.id_runner)
-	// speed := g.runners[g.id_runner].get_speed()
+	speed := g.runners[g.id_runner].get_speed()
 
 	for i := range g.runners {
 		g.runners[i].CheckArrival(&g.f)
 	}
 
-	// if (!finished && inpututil.IsKeyJustPressed(ebiten.KeySpace)) {
-	// 	s := fmt.Sprintf("%f", speed)
-	// 	g.writeToServer("51"+id+s)
-	// }
+	if (!finished && inpututil.IsKeyJustPressed(ebiten.KeySpace)) {
+		s := fmt.Sprintf("%f", speed)
+		g.writeToServer("51"+id+s)
+	}
 
 	finished = g.runners[g.id_runner].arrived
-	if finished && !g.good {
+	if finished && !g.good {		
 		g.writeToServer("50"+id)
 		g.good = true
 	}
