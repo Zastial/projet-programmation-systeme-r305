@@ -79,30 +79,28 @@ func (g *Game)HandleWelcomeScreenMulti() (bool) {
 
 func (g *Game) runnersColor() {
 
-	id := strconv.Itoa(g.id_runner)
-
 	select {
 	case mess := <-g.receiveChannel:
 		for couleur:=1;couleur<=8;couleur++ {
-			if string(mess) == "4"+strconv.Itoa(0)+strconv.Itoa(couleur) && id != "0" {
+			if string(mess) == "4"+strconv.Itoa(0)+strconv.Itoa(couleur) {
 				g.runners[0].set_colorScheme(couleur-1)
 			}
 		}
 	case mess := <-g.receiveChannel:
 		for couleur:=1;couleur<=8;couleur++ {
-			if string(mess) == "4"+strconv.Itoa(1)+strconv.Itoa(couleur) && id != "1" {
+			if string(mess) == "4"+strconv.Itoa(1)+strconv.Itoa(couleur) {
 				g.runners[1].set_colorScheme(couleur-1)
 			}
 		}
 	case mess := <-g.receiveChannel:
 		for couleur:=1;couleur<=8;couleur++ {
-			if string(mess) == "4"+strconv.Itoa(2)+strconv.Itoa(couleur) && id != "2" {
+			if string(mess) == "4"+strconv.Itoa(2)+strconv.Itoa(couleur) {
 				g.runners[2].set_colorScheme(couleur-1)
 			}
 		}
 	case mess := <-g.receiveChannel:
 		for couleur:=1;couleur<=8;couleur++ {
-			if string(mess) == "4"+strconv.Itoa(3)+strconv.Itoa(couleur) && id != "3" {
+			if string(mess) == "4"+strconv.Itoa(3)+strconv.Itoa(couleur) {
 				g.runners[3].set_colorScheme(couleur-1)
 			}
 		}
@@ -124,7 +122,7 @@ func (g *Game) ChooseRunnersMulti() (bool) {
 	// }
 	// if ebiten.IsKeyPressed(ebiten.KeyLeft) && !g.good {
 	// 	colorSchemeCurrentlyOn := strconv.Itoa(g.runners[g.id_runner].get_colorScheme()+1)
-	// 	g.writeToServer("4"+id+colorSchemeCurrentlyOn)	
+	// 	g.writeToServer("4"+id+colorSchemeCurrentlyOn)
 	// }
 
 	if (g.runners[g.id_runner].ManualChoose() && !g.good) {

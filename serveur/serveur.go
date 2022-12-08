@@ -68,7 +68,6 @@ func main() {
 	}
 
 
-
 	chooseRunner()
 
 
@@ -87,6 +86,7 @@ func playerSelector() {
 	ancienMess2 := ""
 	ancienMess3 := ""
 
+
 	for {
 		select {
 		case mess := <-clientsPresents[0].receiveChannel:
@@ -94,7 +94,6 @@ func playerSelector() {
 				if string(mess) == "4"+strconv.Itoa(0)+strconv.Itoa(i) && mess != ancienMess0 {
 					writeToClients(clientsPresents,mess)
 					ancienMess0 = mess
-					break
 				}
 			}	
 		case mess := <-clientsPresents[1].receiveChannel:
@@ -102,7 +101,6 @@ func playerSelector() {
 				if string(mess) == "4"+strconv.Itoa(1)+strconv.Itoa(i) && mess != ancienMess1 {
 					writeToClients(clientsPresents,mess)
 					ancienMess1 = mess
-					break
 				}
 			}
 		case mess := <-clientsPresents[2].receiveChannel:
@@ -110,7 +108,6 @@ func playerSelector() {
 				if string(mess) == "4"+strconv.Itoa(2)+strconv.Itoa(i) && mess != ancienMess2 {
 					writeToClients(clientsPresents,mess)
 					ancienMess1 = mess
-					break
 				}
 			}
 		case mess := <-clientsPresents[3].receiveChannel:
@@ -118,7 +115,6 @@ func playerSelector() {
 				if string(mess) == "4"+strconv.Itoa(3)+strconv.Itoa(i) && mess != ancienMess3 {
 					writeToClients(clientsPresents,mess)
 					ancienMess1 = mess
-					break
 				}
 			}
 		default:
@@ -133,7 +129,7 @@ func chooseRunner() {
 	runnerschose := [4]bool{}
 	runnersColor := ""
 
-	go playerSelector()
+	// go playerSelector()
 
 	ancienMess0 := ""
 	ancienMess1 := ""
@@ -141,34 +137,7 @@ func chooseRunner() {
 	ancienMess3 := ""
 	
 	for {
-
-		select{
-		case mess := <-clientsPresents[0].receiveChannel:
-			if string(mess)[:2] == "3"+strconv.Itoa(0) && mess != ancienMess0{
-				runnerschose[0] = true
-				runnersColor += string(string(mess)[2])
-				ancienMess0 = mess
-			}
-		case mess := <-clientsPresents[1].receiveChannel:
-			if string(mess)[:2] == "3"+strconv.Itoa(1) && mess != ancienMess1 {
-				runnerschose[1] = true
-				runnersColor += string(string(mess)[2])
-				ancienMess1 = mess
-			}
-		case mess := <-clientsPresents[2].receiveChannel:
-			if string(mess)[:2] == "3"+strconv.Itoa(2) && mess != ancienMess2 {
-				runnerschose[2] = true
-				runnersColor += string(string(mess)[2])
-				ancienMess2 = mess
-			}
-		case mess := <-clientsPresents[3].receiveChannel:
-			if string(mess)[:2] == "3"+strconv.Itoa(3) && mess != ancienMess3 {
-				runnerschose[3] = true
-				runnersColor += string(string(mess)[2])
-				ancienMess3 = mess
-			}	
-		}
-
+		
 		c := 0
 		for i := range runnerschose {
 			if runnerschose[i] == true {
@@ -239,10 +208,9 @@ func checkArrival() {
 
 	ClientsFinished := [4]bool{}
 
+	// checkPos()
+
 	for {
-
-		// checkPos()
-
 		for i,client := range clientsPresents {	
 			if string(<-client.receiveChannel) == "50"+strconv.Itoa(i) {	
 				ClientsFinished[i] = true
