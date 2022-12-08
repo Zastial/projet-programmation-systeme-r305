@@ -68,7 +68,6 @@ func main() {
 	}
 
 
-
 	chooseRunner()
 
 
@@ -238,10 +237,9 @@ func checkArrival() {
 
 	ClientsFinished := [4]bool{}
 
+	// checkPos()
+
 	for {
-
-		// checkPos()
-
 		for i,client := range clientsPresents {	
 			if string(<-client.receiveChannel) == "50"+strconv.Itoa(i) {	
 				ClientsFinished[i] = true

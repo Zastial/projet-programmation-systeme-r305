@@ -97,25 +97,25 @@ func (g *Game) runnersColor() {
 	select {
 	case mess := <-g.receiveChannel:
 		for couleur:=1;couleur<=8;couleur++ {
-			if string(mess) == "4"+strconv.Itoa(0)+strconv.Itoa(couleur) && id != "0" {
+			if string(mess) == "4"+strconv.Itoa(0)+strconv.Itoa(couleur) {
 				g.runners[0].set_colorScheme(couleur-1)
 			}
 		}
 	case mess := <-g.receiveChannel:
 		for couleur:=1;couleur<=8;couleur++ {
-			if string(mess) == "4"+strconv.Itoa(1)+strconv.Itoa(couleur) && id != "1" {
+			if string(mess) == "4"+strconv.Itoa(1)+strconv.Itoa(couleur) {
 				g.runners[1].set_colorScheme(couleur-1)
 			}
 		}
 	case mess := <-g.receiveChannel:
 		for couleur:=1;couleur<=8;couleur++ {
-			if string(mess) == "4"+strconv.Itoa(2)+strconv.Itoa(couleur) && id != "2" {
+			if string(mess) == "4"+strconv.Itoa(2)+strconv.Itoa(couleur) {
 				g.runners[2].set_colorScheme(couleur-1)
 			}
 		}
 	case mess := <-g.receiveChannel:
 		for couleur:=1;couleur<=8;couleur++ {
-			if string(mess) == "4"+strconv.Itoa(3)+strconv.Itoa(couleur) && id != "3" {
+			if string(mess) == "4"+strconv.Itoa(3)+strconv.Itoa(couleur) {
 				g.runners[3].set_colorScheme(couleur-1)
 			}
 		}
