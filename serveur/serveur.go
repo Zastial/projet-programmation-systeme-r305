@@ -87,44 +87,42 @@ func playerSelector() {
 	ancienMess2 := ""
 	ancienMess3 := ""
 
-	for {
-		select {
-		case mess := <-clientsPresents[0].receiveChannel:
-			for i:=1;i<=8;i++ {
-				if string(mess) == "4"+strconv.Itoa(0)+strconv.Itoa(i) && mess != ancienMess0 {
-					writeToClients(clientsPresents,mess)
-					ancienMess0 = mess
-					break
-				}
-			}	
-		case mess := <-clientsPresents[1].receiveChannel:
-			for i:=1;i<=8;i++ {
-				if string(mess) == "4"+strconv.Itoa(1)+strconv.Itoa(i) && mess != ancienMess1 {
-					writeToClients(clientsPresents,mess)
-					ancienMess1 = mess
-					break
-				}
+	select {
+	case mess := <-clientsPresents[0].receiveChannel:
+		for i:=1;i<=8;i++ {
+			if string(mess) == "4"+strconv.Itoa(0)+strconv.Itoa(i) && mess != ancienMess0 {
+				writeToClients(clientsPresents,mess)
+				ancienMess0 = mess
+				break
 			}
-		case mess := <-clientsPresents[2].receiveChannel:
-			for i:=1;i<=8;i++ {
-				if string(mess) == "4"+strconv.Itoa(2)+strconv.Itoa(i) && mess != ancienMess2 {
-					writeToClients(clientsPresents,mess)
-					ancienMess1 = mess
-					break
-				}
-			}
-		case mess := <-clientsPresents[3].receiveChannel:
-			for i:=1;i<=8;i++ {
-				if string(mess) == "4"+strconv.Itoa(3)+strconv.Itoa(i) && mess != ancienMess3 {
-					writeToClients(clientsPresents,mess)
-					ancienMess1 = mess
-					break
-				}
-			}
-		default:
-			break
 		}	
-	}
+	case mess := <-clientsPresents[1].receiveChannel:
+		for i:=1;i<=8;i++ {
+			if string(mess) == "4"+strconv.Itoa(1)+strconv.Itoa(i) && mess != ancienMess1 {
+				writeToClients(clientsPresents,mess)
+				ancienMess1 = mess
+				break
+			}
+		}
+	case mess := <-clientsPresents[2].receiveChannel:
+		for i:=1;i<=8;i++ {
+			if string(mess) == "4"+strconv.Itoa(2)+strconv.Itoa(i) && mess != ancienMess2 {
+				writeToClients(clientsPresents,mess)
+				ancienMess1 = mess
+				break
+			}
+		}
+	case mess := <-clientsPresents[3].receiveChannel:
+		for i:=1;i<=8;i++ {
+			if string(mess) == "4"+strconv.Itoa(3)+strconv.Itoa(i) && mess != ancienMess3 {
+				writeToClients(clientsPresents,mess)
+				ancienMess1 = mess
+				break
+			}
+		}
+	default:
+		break
+	}	
 	
 }
 
@@ -133,7 +131,6 @@ func chooseRunner() {
 	runnerschose := [4]bool{}
 	runnersColor := ""
 
-	go playerSelector()
 
 	ancienMess0 := ""
 	ancienMess1 := ""
@@ -141,6 +138,8 @@ func chooseRunner() {
 	ancienMess3 := ""
 	
 	for {
+
+		playerSelector()
 
 		select{
 		case mess := <-clientsPresents[0].receiveChannel:
@@ -166,7 +165,7 @@ func chooseRunner() {
 				runnerschose[3] = true
 				runnersColor += string(string(mess)[2])
 				ancienMess3 = mess
-			}	
+			}
 		}
 
 		c := 0

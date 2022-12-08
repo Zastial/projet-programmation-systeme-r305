@@ -80,6 +80,19 @@ func (g *Game)HandleWelcomeScreenMulti() (bool) {
 func (g *Game) runnersColor() {
 
 	id := strconv.Itoa(g.id_runner)
+	colorSchemeCurrentlyOn := strconv.Itoa(g.runners[g.id_runner].get_colorScheme()+1)
+
+	ancienMess0 := ""
+	ancienMess1 := ""
+
+	if ebiten.IsKeyPressed(ebiten.KeyRight) && !g.good && colorSchemeCurrentlyOn != ancienMess0  {
+		g.writeToServer("4"+id+colorSchemeCurrentlyOn)
+		ancienMess0 = "4"+id+colorSchemeCurrentlyOn
+	}
+	if ebiten.IsKeyPressed(ebiten.KeyLeft) && !g.good && colorSchemeCurrentlyOn != ancienMess1 {
+		g.writeToServer("4"+id+colorSchemeCurrentlyOn)
+		ancienMess1 = colorSchemeCurrentlyOn
+	}
 
 	select {
 	case mess := <-g.receiveChannel:
@@ -114,18 +127,11 @@ func (g *Game) runnersColor() {
 
 func (g *Game) ChooseRunnersMulti() (bool) {
 
-	// go g.runnersColor()
-
 	id := strconv.Itoa(g.id_runner)
 
-	// if ebiten.IsKeyPressed(ebiten.KeyRight) && !g.good {
-	// 	colorSchemeCurrentlyOn := strconv.Itoa(g.runners[g.id_runner].get_colorScheme()+1)
-	// 	g.writeToServer("4"+id+colorSchemeCurrentlyOn)	
-	// }
-	// if ebiten.IsKeyPressed(ebiten.KeyLeft) && !g.good {
-	// 	colorSchemeCurrentlyOn := strconv.Itoa(g.runners[g.id_runner].get_colorScheme()+1)
-	// 	g.writeToServer("4"+id+colorSchemeCurrentlyOn)	
-	// }
+	if !g.good {
+		g.runnersColor()
+	}
 
 	if (g.runners[g.id_runner].ManualChoose() && !g.good) {
 		couleur := strconv.Itoa(g.runners[g.id_runner].get_colorScheme())
