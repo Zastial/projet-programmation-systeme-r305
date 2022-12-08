@@ -161,21 +161,18 @@ func (g *Game) ChooseRunnersMulti() (bool) {
 
 
 func (g *Game) UpdateRunnersMulti() {
-	for i := range g.runners {
-		if i == g.id_runner {
-			g.runners[g.id_runner].ManualUpdate()
-		}
-	}
+	g.runners[g.id_runner].ManualUpdate()
 }
 
 
 func (g *Game) checkPosPlayers() {
 
-	// for i := range g.runners {
-	// 	if i != g.id_runner {
-	// 		g.runners[i].UpdateSpeed(false)
-	// 	}
-	// }
+	for i := range g.runners {
+		if i != g.id_runner {
+			g.runners[i].UpdateSpeed(false)
+			g.runners[i].UpdatePos()
+		}
+	}
 
 	select {
 	case msg := <-g.receiveChannel :
@@ -184,7 +181,9 @@ func (g *Game) checkPosPlayers() {
 			if string(msg) != "" || string(msg) != " " {
 				g.runners[0].set_speed(playerSpeed)
 				g.runners[0].UpdateSpeed(true)
-				g.runners[0].UpdatePos()
+				for i:= 0; i < 15; i++ {
+					g.runners[0].UpdatePos()
+				}	
 			}
 		}
 	case msg := <-g.receiveChannel :
@@ -193,7 +192,9 @@ func (g *Game) checkPosPlayers() {
 			if string(msg) != "" || string(msg) != " " {
 				g.runners[1].set_speed(playerSpeed)
 				g.runners[1].UpdateSpeed(true)
-				g.runners[1].UpdatePos()
+				for i:= 0; i < 15; i++ {
+					g.runners[1].UpdatePos()
+				}	
 			}
 		}
 	case msg := <-g.receiveChannel :
@@ -202,7 +203,9 @@ func (g *Game) checkPosPlayers() {
 			if string(msg) != "" || string(msg) != " " {
 				g.runners[2].set_speed(playerSpeed)
 				g.runners[2].UpdateSpeed(true)
-				g.runners[2].UpdatePos()
+				for i:= 0; i < 15; i++ {
+					g.runners[2].UpdatePos()
+				}	
 			}
 		}
 	case msg := <-g.receiveChannel :
@@ -211,7 +214,9 @@ func (g *Game) checkPosPlayers() {
 			if string(msg) != "" || string(msg) != " " {
 				g.runners[3].set_speed(playerSpeed)
 				g.runners[3].UpdateSpeed(true)
-				g.runners[3].UpdatePos()
+				for i:= 0; i < 15; i++ {
+					g.runners[3].UpdatePos()
+				}	
 			}
 		}
 	default:
@@ -287,26 +292,3 @@ func (g *Game) HandleResultsMulti() bool {
 
 
 
-
-
-
-
-// func (g *Game) getCouleurs() {
-
-// 	message := <- g.receiveChannel
-
-// 	words := strings.Fields(message)
-
-// 	var couleur = ""
-// 	for _, word := range words {
-// 		couleur = word
-// 		break
-// 	}
-	
-// 	if string(couleur[0]) == "0" {
-// 		log.Print("C'EST BON CHAKAL")
-// 		g.good = true
-// 	}
-
-// 	return
-// }
