@@ -62,3 +62,10 @@
 - 800 : Tous les joueurs veulent rejouer, la course se relance.
 
 
+## **Changements à faire / Choses à rajouter :**
+
+- Envoyer la xpos plutôt que la speed, sinon trop approximatif.
+
+- Trouver un moyen d'envoyer le temps réalisé aux autres clients.
+
+- Faire en sorte que le nombre de clients connectés se mette à jour sur l'écran d'accueil
