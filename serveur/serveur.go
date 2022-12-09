@@ -228,10 +228,11 @@ func checkArrival() {
 	ancienMess1 := ""
 	ancienMess2 := ""
 	ancienMess3 := ""
-
-	go checkPos()
-
+	
 	for {
+
+		checkPos()
+
 		select{
 		case mess := <-clientsPresents[0].receiveChannel:
 			if string(mess[:3]) == "500" && mess != ancienMess0{
