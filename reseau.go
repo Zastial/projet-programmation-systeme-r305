@@ -179,7 +179,7 @@ func (g *Game) checkPosPlayers() {
 			if string(msg) != "" || string(msg) != " " {
 				g.runners[0].set_speed(playerSpeed)
 				g.runners[0].UpdateSpeed(true)
-				for i:= 0; i < 15; i++ {
+				for i:= 0; i < 30; i++ {
 					g.runners[0].UpdatePos()
 				}	
 			}
@@ -190,7 +190,7 @@ func (g *Game) checkPosPlayers() {
 			if string(msg) != "" || string(msg) != " " {
 				g.runners[1].set_speed(playerSpeed)
 				g.runners[1].UpdateSpeed(true)
-				for i:= 0; i < 15; i++ {
+				for i:= 0; i < 30; i++ {
 					g.runners[1].UpdatePos()
 				}	
 			}
@@ -201,7 +201,7 @@ func (g *Game) checkPosPlayers() {
 			if string(msg) != "" || string(msg) != " " {
 				g.runners[2].set_speed(playerSpeed)
 				g.runners[2].UpdateSpeed(true)
-				for i:= 0; i < 15; i++ {
+				for i:= 0; i < 30; i++ {
 					g.runners[2].UpdatePos()
 				}	
 			}
@@ -212,7 +212,7 @@ func (g *Game) checkPosPlayers() {
 			if string(msg) != "" || string(msg) != " " {
 				g.runners[3].set_speed(playerSpeed)
 				g.runners[3].UpdateSpeed(true)
-				for i:= 0; i < 15; i++ {
+				for i:= 0; i < 30; i++ {
 					g.runners[3].UpdatePos()
 				}	
 			}
