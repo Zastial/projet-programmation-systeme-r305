@@ -62,7 +62,7 @@ func InitGame() (g Game) {
 	for i := range g.runners {
 		g.runners[i] = Runner{
 			xpos: start, ypos: 50 + float64(i*20),
-			maxFrameInterval: frameInterval, //changé les frames de base à 0 pour le max pour tt le monde
+			maxFrameInterval: frameInterval, //changer les frames de base à 0 pour le max pour tt le monde
 			colorScheme:      0,
 		}
 	}
