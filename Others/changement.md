@@ -1,6 +1,3 @@
-# **Projet Programmation Systeme**
-
-
 # Changements effectués dans le jeu  
 
 ## Changement dans des fichiers existants :
