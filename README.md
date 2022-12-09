@@ -3,7 +3,7 @@
 
 # Changements effectués dans le jeu  
 
-## Changement dans des fichiers existants :
+## **Changement dans des fichiers existants :**
 
 ### **runner.go :**
 
@@ -27,7 +27,7 @@
 - Changement de la fonction **Update**. Désormais chaque case est géré par une fonction implémentée dans **reseau.go** (ligne 112)
 - Affichage des joueurs connectés à l'écran d'accueil (ligne 40)
 
-## Ajout de nouveaux fichiers :
+## **Ajout de nouveaux fichiers :**
 
 ### **reseau.go :** 
 
@@ -36,3 +36,29 @@
 ### **serveur.go :**
 
 - se charge de la communication avec les joueurs
+
+
+## **Signification des codes :**
+
+- 100 : Le joueur est connecté.
+
+- 200 : Tous les joueurs sont connectés, la partie peut débuter.
+
+- 3 + id + num.Couleur : Code envoyé par le joueur au serveur pour notifier qu'il a choisi sa couleur.
+
+- 400 : Tous les joueurs ont sélectionné une couleur.
+    - 4 + id + num.Couleur : Renvoie aux clients les couleurs choisies par les autres.
+
+- 50+id : Le joueur est arrivé, sa course est terminée.
+
+- 51 + id + pos.Joueur : Le joueur envoie sa position au serveur.
+
+- 9 + id + pos.Joueur : Le serveur envoie la position d'un joueur à tous les autres.
+
+- 600 : Les joueurs sont tous arrivés, la course est terminée.
+
+- 70 + id : le joueur dit qu'il veut rejouer.
+
+- 800 : Tous les joueurs veulent rejouer, la course se relance.
+
+
