@@ -136,10 +136,10 @@ func chooseRunner() {
 	ancienMess1 := ""
 	ancienMess2 := ""
 	ancienMess3 := ""
-	
-	for {
 
-		playerSelector()
+	go playerSelector()
+
+	for {
 
 		select{
 		case mess := <-clientsPresents[0].receiveChannel:
@@ -229,10 +229,9 @@ func checkArrival() {
 	ancienMess2 := ""
 	ancienMess3 := ""
 
+	go checkPos()
+
 	for {
-
-		checkPos()
-
 		select{
 		case mess := <-clientsPresents[0].receiveChannel:
 			if string(mess[:3]) == "500" && mess != ancienMess0{

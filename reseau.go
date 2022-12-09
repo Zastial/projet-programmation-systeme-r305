@@ -258,6 +258,13 @@ func (g *Game) checkPosPlayers() {
 	
 }
 
+/*
+	Cette fonction gère la course entre les joueurs.
+	Si le client n'est pas arrivé, il envoie un message au serveur chaque fois que la touche ESPACE est pressée afin d'envoyer sa vitesse au serveur,
+	et dès qu'il est arrivé, il envoie '500' et attend.
+	Tant que le client n'a pas reçu la confirmation du serveur que tout le monde est arrivé, il continue d'attendre.
+	Si le serveur envoie "600" alors on passe à l'écran suivant.
+*/
 func (g *Game) CheckArrivalMulti() (finished bool) {
 
 	if !g.good {
@@ -295,6 +302,13 @@ func (g *Game) CheckArrivalMulti() (finished bool) {
 	return false
 }
 
+/*
+	Cette fonction gère l'affichage des résultats et le redémarrage du jeu.
+	Si le client n'est pas arrivé, il envoie un message au serveur chaque fois que la touche ESPACE est pressée afin d'envoyer sa vitesse au serveur,
+	et dès qu'il est arrivé, il envoie '500' et attend.
+	Tant que le client n'a pas reçu la confirmation du serveur que tout le monde est arrivé, il continue d'attendre.
+	Si le serveur envoie "600" alors on passe à l'écran suivant.
+*/
 func (g *Game) HandleResultsMulti() bool {
 
 	if !g.good {
