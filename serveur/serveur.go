@@ -299,13 +299,20 @@ func handleResults() {
 
 
 
-
+/*
+	Cette fonction envoie un message à un client voulu.
+	Le message est envoyé en utilisant le protocole TCP.
+*/
 func writeMessage(client ClientListener, message string) (data int, err error) {
 	data, err = client.conn.Write([]byte(message+"\n"))
 	log.Println("Le message envoyé est : "+message)
 	return data,err
 }
 
+/*
+	Cette fonction envoie un message à tous les clients connectés.
+	Le message est envoyé en utilisant le protocole TCP.
+*/
 func writeToClients(clients []ClientListener, message string) (err error) {
 	for _, client := range clients {
 		_,err := writeMessage(client,message)
@@ -317,6 +324,9 @@ func writeToClients(clients []ClientListener, message string) (err error) {
 	return err
 }
 
+/*
+	Cette fonction permet de recevoir et de stocker dans un channel les messages envoyés par les clients aux serveurs.
+*/
 func receiveFromClient(client ClientListener){
 	reader := bufio.NewReader(client.conn)
 	for {
@@ -331,7 +341,9 @@ func receiveFromClient(client ClientListener){
 	}
 }
 
-
+/*
+	Cette fonction sert à vider le channel si trop de message ont été envoyés et stockés dans le channel.
+*/
 func emptyChannel() {
 	for _,client := range clientsPresents {
 		for len(client.receiveChannel) > 0 {
