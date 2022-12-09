@@ -19,6 +19,9 @@ var clientsPresents []ClientListener
 
 func main() {
 
+	/*
+		Écoute les clients
+	*/
 	listener, err := net.Listen("tcp", ":8080")
 	if err != nil {
 		log.Println("listen error:", err)
@@ -26,8 +29,12 @@ func main() {
 	}
 	defer listener.Close()
 
+	// Nombre de joueurs
 	var maxClients = 4
 
+	/* 
+		Attend que tout les clients soient connectés avant de lancer la suite du programme
+	*/
 	for(len(clientsPresents) < maxClients) {
 		conn, err := listener.Accept()
 		if err != nil {
@@ -69,7 +76,6 @@ func main() {
 
 
 	chooseRunner()
-
 
 	for {
 		checkArrival()
