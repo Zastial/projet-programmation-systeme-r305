@@ -13,6 +13,12 @@ import (
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 )
 
+/*
+	Cette fonction gère la connexion à un serveur sur l'adresse IP spécifiée dans le champ IP de l'objet Game.
+	La connexion est établie en utilisant le protocole TCP sur le port 8080.
+	Si la connexion réussit, l'objet conn est enregistré dans le champ conn de l'objet Game et le champ good est mis à false.
+	Enfin, elle lance une goroutine appelée readFromServer pour lire les données en provenance du serveur.
+*/
 func (g *Game)connexion() {
 	conn, err := net.Dial("tcp", g.IP + ":8080")
 	if err != nil {
@@ -23,6 +29,12 @@ func (g *Game)connexion() {
 	g.good = false
 	go g.readFromServer()
 }
+
+/*
+	Cette fonction envoie un message au serveur auquel l'objet Game est connecté.
+	Le message est envoyé en utilisant le protocole TCP.
+	Le message est envoyé deux fois pour être sûr qu'il arrive correctement au serveur.
+*/
 
 func (g *Game)writeToServer(message string) {
 	writer := bufio.NewWriter(g.conn)
@@ -36,6 +48,12 @@ func (g *Game)writeToServer(message string) {
 	log.Println("Message envoyé au serveur : ", message)
 }
 
+/*
+	Cette fonction lit les données en provenance du serveur auquel l'objet Game est connecté.
+	Les données sont lues en continu dans une boucle infinie jusqu'à ce que la connexion soit fermée.
+	Si une erreur survient pendant la lecture, elle est enregistrée dans les journaux.
+	Chaque message lu est envoyé au canal receiveChannel de l'objet Game.
+*/
 func (g *Game)readFromServer() {
 	reader := bufio.NewReader(g.conn)
 	for {
@@ -51,7 +69,16 @@ func (g *Game)readFromServer() {
 	}
 }
 
+/*
+	Cette fonction gère l'écran de bienvenue en mode multijoueur.
+	Si la touche ESPACE est pressée et que l'objet Game n'est pas connecté à un serveur, elle lance la fonction connexion pour établir la connexion.
+	Ensuite, elle utilise une instruction select pour attendre les messages provenant du serveur via le canal receiveChannel de l'objet Game.
+	Si un message est reçu, la fonction vérifie si le message est un nombre entier compris entre 1 et 4 inclus,
+	auquel cas elle enregistre l'ID du joueur dans le champ id_runner de l'objet Game et le nombre de joueurs dans le champ nbRunner.
 
+	Si le message est "200", la fonction renvoie true.
+
+*/
 func (g *Game)HandleWelcomeScreenMulti() (bool) {
 	if g.conn == nil && inpututil.IsKeyJustPressed(ebiten.KeySpace) {
 		g.connexion()
@@ -124,6 +151,12 @@ func (g *Game) runnersColor() {
 	
 }
 
+/*
+	Cette fonction gère l'écran du choix des personnages.
+	Si le choix du joueur est fait, le client envoie un message au serveur pour lui envoyer la couleur définie.
+	Tant que le client n'a pas reçu la confirmation du serveur que tout le monde a choisi sa couleur, il attend.
+	Si le serveur envoie "400" alors on passe à l'écran suivant.
+*/
 func (g *Game) ChooseRunnersMulti() (bool) {
 
 	id := strconv.Itoa(g.id_runner)
@@ -157,7 +190,9 @@ func (g *Game) ChooseRunnersMulti() (bool) {
 	return false
 }
 
-
+/*
+	Met à jour le joueur sur l'écran
+*/
 func (g *Game) UpdateRunnersMulti() {
 	g.runners[g.id_runner].ManualUpdate()
 }
