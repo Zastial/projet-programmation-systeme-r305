@@ -255,7 +255,6 @@ func (g *Game) checkPosPlayers() {
 	default:
 		break
 	}
-	
 }
 
 /*

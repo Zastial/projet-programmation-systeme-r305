@@ -1,0 +1,18 @@
+100 : Joueur connecté.
+
+200 : Tous les joueurs sont connectés, la partie peut débuter.
+
+3 + id + num.Couleur : Code envoyé par le joueur pour notifier qu'il a choisi sa couleur.
+
+400 : Tous les joueurs ont sélectionné une couleur.
+4 + id + num.Couleur : Renvoie aux clients les couleurs choisies par les autres.
+
+500 : Joueur arrivé, course terminée.
+51 + id + pos.Joueur : Le joueur envoie sa position au serveur.
+9+id+pos.Joueur : Le serveur envoie la position d'un joueur à tous les autres.
+
+600 : Les joueurs sont tous arrivés.
+
+70 + id : le joueur dit qu'il veut rejouer.
+
+800 : Tous les joueurs veulent rejouer.
